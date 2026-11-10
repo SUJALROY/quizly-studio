@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827"><title>Quizly — Practice Studio</title>
+<link rel="stylesheet" href="style.css"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+  <a class="brand" href="#"><span class="logo">Q</span><span>quizly</span><small>STUDIO</small></a>
+  <div class="top-actions"><span class="mode-pill"><i></i> PRACTICE MODE</span><button id="themeBtn" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">◐</button></div>
+</header>
+<main>
+<section id="homeView" class="view">
+  <section class="hero">
+    <div><span class="eyebrow">YOUR PERSONAL QUESTION STUDIO</span><h1>Practice smarter.<br><em>Go further.</em></h1><p>Import questions, review them, customise your test and practise with a countdown timer.</p>
+      <div class="hero-tags"><span>✓ Free hosting</span><span>✓ Works on mobile</span><span>✓ Files stay in your browser</span></div>
+    </div>
+    <div class="hero-visual"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="hero-token"><span>✦</span><b>Q</b><small>LET'S LEARN</small></div><div class="float-card fc-a">01 <small>IMPORT</small></div><div class="float-card fc-b">✓ <small>READY</small></div></div>
+  </section>
+
+  <div class="workspace-grid">
+    <section class="panel">
+      <div class="panel-head"><div><span class="eyebrow">STEP 01</span><h2>Build your question set</h2></div><span class="head-icon">＋</span></div>
+      <label id="dropzone" class="dropzone" for="fileInput"><span class="upload-symbol">↑</span><strong>Drop a file to import questions</strong><span>or <u>browse your device</u></span><small>DOCX · text PDF · TXT</small><input id="fileInput" type="file" accept=".docx,.pdf,.txt"></label>
+      <div class="row-actions"><button id="sampleBtn" class="outline-btn">Load sample set</button><button id="addQuestionBtn" class="outline-btn">＋ Add question manually</button></div>
+      <div id="importStatus" class="status">No questions added yet.</div>
+      <div class="format-box"><b>Recommended Word/PDF format</b><pre>Q1. Your question here?
+A. First option
+B. Second option
+C. Third option
+D. Fourth option
+Answer: B</pre><small>Include an answer key for automatic scoring. Keep each option on its own line.</small></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><span class="eyebrow">STEP 02</span><h2>Test settings</h2></div><span class="head-icon">⚙</span></div>
+      <label class="field-label" for="quizTitle">Quiz name</label><input id="quizTitle" class="input" maxlength="80" value="My Practice Quiz">
+      <div class="two-fields"><div><label class="field-label" for="duration">Time limit</label><div class="suffix"><input id="duration" class="input" type="number" min="1" max="300" value="30"><span>min</span></div></div><div><label class="field-label" for="questionLimit">Question count</label><div class="suffix"><input id="questionLimit" class="input" type="number" min="0" value="0"><span>all</span></div></div></div>
+      <label class="field-label" for="shuffleQuestions">Question order</label><select id="shuffleQuestions" class="input"><option value="no">Original order</option><option value="yes">Shuffle questions</option></select>
+      <label class="field-label" for="shuffleOptions">Option order</label><select id="shuffleOptions" class="input"><option value="no">Original order</option><option value="yes">Shuffle options</option></select>
+      <div class="score-setting"><label for="negativeMarking"><span><b>Negative marking</b><small>Deduct marks for wrong answers</small></span><input id="negativeMarking" type="checkbox"></label><div class="suffix compact"><input id="negativeValue" class="input" type="number" min="0" max="10" step=".25" value="0.25"><span>marks</span></div></div>
+      <div class="privacy-line"><i></i> No login · Browser-based · Private</div>
+      <button id="startBtn" class="primary-btn" disabled>Start practice <span>→</span></button>
+    </section>
+  </div>
+
+  <section class="question-bank panel">
+    <div class="bank-head"><div><span class="eyebrow">QUESTION BANK</span><h2>Review your questions</h2><p id="bankCount">Your imported questions will appear here.</p></div><div class="bank-actions"><button id="exportBtn" class="outline-btn" disabled>Export JSON</button><button id="clearBtn" class="quiet-btn" disabled>Clear all</button></div></div>
+    <div id="questionList" class="question-list"><div class="empty-state">Your question list is empty. Upload a file or add a question to get started.</div></div>
+    <div class="local-storage-bar">
+      <div class="storage-copy"><span class="storage-icon">▣</span><span><b>Saved on this device</b><small id="storageStatus">Preparing local storage…</small></span></div>
+      <div class="storage-actions"><button id="backupBtn" class="outline-btn">Download backup</button><button id="restoreBtn" class="outline-btn">Restore backup</button><input id="backupInput" type="file" accept=".json,application/json" hidden></div>
+    </div>
+  </section>
+  <section class="how"><span class="eyebrow">SIMPLE WORKFLOW</span><div class="how-grid"><div><b>01</b><strong>Import</strong><p>Upload Word, PDF or TXT questions.</p></div><div><b>02</b><strong>Review</strong><p>Edit detected questions and answer keys.</p></div><div><b>03</b><strong>Practise</strong><p>Take your timed practice test.</p></div><div><b>04</b><strong>Improve</strong><p>See your score and retry anytime.</p></div></div></section>
+</section>
+
+<section id="quizView" class="view hidden">
+  <div class="quiz-bar"><button id="exitBtn" class="back-btn">← Back to studio</button><span class="live-pill"><i></i> PRACTICE IN PROGRESS</span></div>
+  <div class="quiz-title-row"><div><span class="eyebrow" id="quizLabel">YOUR PRACTICE TEST</span><h1 id="activeTitle">Practice Quiz</h1></div><div id="timerCard" class="timer-card"><small>TIME REMAINING</small><strong id="timer">30:00</strong></div></div>
+  <div class="progress-area"><div><span id="progressText">Question 1 of 1</span><span id="answeredText">0 answered</span></div><div class="progress-track"><i id="progressBar"></i></div></div>
+  <div class="quiz-grid">
+    <section class="panel question-card"><div class="question-meta"><span id="questionNo">QUESTION 01</span><span>SELECT ONE ANSWER</span></div><h2 id="questionText"></h2><div id="options" class="options"></div><div class="question-footer"><button id="prevBtn" class="outline-btn">← Previous</button><button id="nextBtn" class="primary-btn">Next question →</button></div></section>
+    <aside class="panel navigator"><h3>Question navigator</h3><p>Choose a question to jump to it.</p><div id="questionNav" class="nav-grid"></div><div class="legend"><span><i class="lg-current"></i> Current</span><span><i class="lg-done"></i> Answered</span></div><button id="submitBtn" class="submit-btn">Submit practice</button></aside>
+  </div>
+</section>
+
+<section id="resultView" class="view hidden">
+  <div class="result-panel panel"><div class="result-mark">✓</div><span class="eyebrow">PRACTICE SESSION COMPLETE</span><h1 id="resultHeading">Well done!</h1><p id="resultMessage">Your practice summary is ready.</p>
+    <div class="score-hero"><small>FINAL SCORE</small><strong id="scoreValue">0 / 0</strong><span id="percentValue">0% score</span></div>
+    <div class="result-grid"><div><b id="correctValue">0</b><small>Correct</small></div><div><b id="wrongValue">0</b><small>Incorrect</small></div><div><b id="skipValue">0</b><small>Unanswered</small></div><div><b id="timeUsed">00:00</b><small>Time used</small></div></div>
+    <div class="result-buttons"><button id="retryBtn" class="primary-btn">Retry this quiz ↻</button><button id="homeBtn" class="outline-btn">Back to studio</button></div>
+    <p class="privacy-note">Your file and answers stay in this browser. This version does not upload results or create student accounts.</p>
+  </div>
+</section>
+</main>
+<footer><span>QUIZLY STUDIO · PRACTICE MADE SIMPLE</span><span>Device storage · Offline-ready · GitHub Pages</span></footer>
+</div>
+
+<div id="editorModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editorHeading"><div class="modal-card editor-card"><button class="close-btn" data-close="editorModal">×</button><span class="eyebrow">QUESTION EDITOR</span><h2 id="editorHeading">Add a question</h2><label class="field-label" for="editQuestion">Question</label><textarea id="editQuestion" class="input textarea" rows="3" placeholder="Enter your question"></textarea><div class="editor-options" id="editorOptions"></div><label class="field-label" for="editCorrect">Correct answer</label><select id="editCorrect" class="input"><option value="">Not provided</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select><div class="modal-actions"><button id="deleteQuestion" class="danger-btn hidden">Delete</button><span class="spacer"></span><button class="outline-btn" data-close="editorModal">Cancel</button><button id="saveQuestion" class="primary-btn">Save question</button></div></div></div>
+<div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmHeading"><div class="modal-card confirm-card"><span class="eyebrow">CONFIRMATION</span><h2 id="confirmHeading">Submit your practice?</h2><p id="confirmMessage">Are you sure?</p><div class="modal-actions"><button id="keepBtn" class="outline-btn">Keep practising</button><button id="confirmBtn" class="primary-btn">Submit now</button></div></div></div>
+<div id="toast" class="toast" role="status"></div>
+</body></html>
